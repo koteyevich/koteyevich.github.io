@@ -1,13 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #242424;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .button {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(50%);
+        }
+
+        .button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .button-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .blurred-img {
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .blurred-img::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            animation: pulse 2.5s infinite;
+            background-color: var(--text-color);
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .blurred-img.loaded::before {
+            animation: none;
+            content: none;
+        }
+
+        .blurred-img>img {
+            opacity: 0;
+            transition: opacity 250ms ease-in-out;
+        }
+
+        .blurred-img.loaded>img {
+            opacity: 1;
+        }
+
+        .falling {
+            position: absolute;
+            top: -100px;
+            width: 50px;
+            height: auto;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+    </style>
 </head>
-<body style="background: #ffffff; color: #202225">
+
+<body>
     <div class="container">
-        <img src="me.jpg" alt="me :D" class="image" onclick="playSpringAnimation(this)">
+        <h1>koteyevich's Homepage</h1>
+        <div class="button-container">
+            <div class="button" id="github-button">
+                <a href="https://github.com/koteyevich">
+                    <div class="blurred-img" style="background-image: url(/images/github_logo-small.png);">
+                        <img src="/images/github_logo.png" alt="Github Redirect Button" loading="lazy" >
+                    </div>
+                    <div class="button-text">My Github</div>
+                </a>
+            </div>
+        </div>
     </div>
 
+    <script>
+        document.querySelectorAll('.blurred-img').forEach(blurredImageDiv => {
+            const img = blurredImageDiv.querySelector('img');
+
+            function loaded() {
+                blurredImageDiv.classList.add('loaded');
+            }
+
+            if (img.complete) {
+                loaded();
+            } else {
+                img.addEventListener('load', loaded);
+            }
+        });
+
+        // Falling leaves effect
+        function createFallingImage() {
+            const img = document.createElement('img');
+            img.src = '/images/falling_me.png';
+            img.className = 'falling';
+            img.style.left = Math.random() * window.innerWidth + 'px';
+            img.style.animationDuration = (5 + Math.random() * 10) + 's';
+            document.body.appendChild(img);
+
+            img.addEventListener('animationend', () => {
+                img.remove();
+            });
+        }
+
+        setInterval(createFallingImage, 1000); // Create a new falling image every second
+    </script>
 </body>
+
 </html>
