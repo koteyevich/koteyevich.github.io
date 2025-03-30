@@ -4,168 +4,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>koteyevich's bio</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #242424;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            color: white;
-            overflow: hidden;
+        :root {
+            --text-color: #ffffff;
+            --accent-color: #ff6b6b;
+            --font-family: 'Arial', sans-serif;
         }
 
-        .container {
-            text-align: center;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .button {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin: 20px;
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .button img {
+        /* Video Background */
+        #video-bg {
+            position: fixed;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(50%);
+            z-index: -1;
+            filter: brightness(0.4);
         }
 
-        .button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.8);
+        /* Content Container */
+        .content {
+            position: relative;
+            min-height: calc(100vh - 120px);
+            /* Adjusted to account for music player */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--text-color);
         }
 
-        .button-text {
-            position: absolute;
-            top: 50%;
+        /* Music Player Styles */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
+            background: rgba(21, 21, 21, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 200px;
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
             color: white;
-            font-size: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .blurred-img {
-            background-repeat: no-repeat;
-            background-size: cover;
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
         }
 
-        .blurred-img::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            animation: pulse 2.5s infinite;
-            background-color: var(--text-color);
+        .control-btn img {
+            width: 1.2rem;
+            height: 1.2rem;
+            filter: invert(1); /* Makes black SVGs white */
         }
 
-        @keyframes pulse {
-            0% {
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 0.1;
-            }
-
-            100% {
-                opacity: 0;
-            }
+        #current-track-title {
+            font-size: 0.9em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+            text-align: center;
         }
 
-        .blurred-img.loaded::before {
-            animation: none;
-            content: none;
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            color: white;
         }
 
-        .blurred-img>img {
-            opacity: 0;
-            transition: opacity 250ms ease-in-out;
+        .volume-control img {
+            width: 1.2rem;
+            height: 1.2rem;
+            filter: invert(1); /* Makes black SVGs white */
         }
 
-        .blurred-img.loaded>img {
-            opacity: 1;
+        #volume-slider {
+            width: 100px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
         }
 
-        .falling {
-            position: absolute;
-            top: -100px;
-            width: 50px;
-            height: auto;
-            animation: fall linear infinite;
+        #volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
         }
 
-        @keyframes fall {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
+        #volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Profile Card Adjustments */
+        .profile-card {
+            background: rgba(21, 21, 21, 0.5);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Social media icons */
+        .social-btn img {
+            width: 1.5rem;
+            height: 1.5rem;
+            filter: brightness(0) invert(1); /* Makes icons white */
+            transition: filter 0.3s ease;
+        }
+
+        /* Platform-specific colors */
+        .social-btn.twitter:hover img {
+            filter: brightness(0) invert(58%) sepia(81%) saturate(4602%) hue-rotate(187deg) brightness(97%) contrast(98%);
+        }
+
+        .social-btn.discord:hover img {
+            filter: brightness(1) invert(37%) sepia(84%) saturate(1952%) hue-rotate(230deg) brightness(100%) contrast(98%);
+        }
+
+        .social-btn.telegram:hover img {
+            filter: brightness(1) invert(48%) sepia(95%) saturate(2161%) hue-rotate(176deg) brightness(98%) contrast(101%);
+        }
+
+        .social-btn.steam:hover img {
+            filter: brightness(1) invert(30%) sepia(86%) saturate(1161%) hue-rotate(176deg) brightness(89%) contrast(89%);
+        }
+
+        /* Keep existing osu styles */
+        .social-btn.osu img {
+            width: 1.5rem;
+            height: 1.5rem;
+            filter: brightness(1);
+            transition: filter 0.3s ease;
+        }
+
+        .social-btn.osu:hover img {
+            filter: brightness(1) invert(77%) sepia(33%) saturate(7498%) hue-rotate(318deg) brightness(101%) contrast(98%);
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>koteyevich's Homepage</h1>
-        <div class="button-container">
-            <div class="button" id="github-button">
-                <a href="https://osu.ppy.sh/users/34957693">
-                    <div class="blurred-img" style="background-image: url(images/osu-small.png);">
-                        <img src="images/osu.png" alt="Osu! Redirect Button" loading="lazy" >
-                    </div>
-                    <div class="button-text"></div>
+    <!-- Video Background -->
+    <video autoplay muted loop id="video-bg">
+        <source src="./assets/media/bg.mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="profile-card">
+            <h1>koteyevich</h1>
+            <p>the silly goober</p>
+            <div class="social-links">
+                <a href="https://twitter.com/koteyevich" target="_blank" class="social-btn twitter">
+                    <img src="assets/icons/twitter-brands.svg" alt="Twitter">
+                </a>
+                <a href="https://discord.com/users/koteyevich" target="_blank" class="social-btn discord">
+                    <img src="assets/icons/discord-brands.svg" alt="Discord">
+                </a>
+                <a href="https://t.me/koteyevich" target="_blank" class="social-btn telegram">
+                    <img src="assets/icons/telegram-brands.svg" alt="Telegram">
+                </a>
+                <br>
+                <a href="https://osu.ppy.sh/users/34957693" target="_blank" class="social-btn osu">
+                    <img src="assets/icons/osu-lazer-logo-white.svg" alt="osu!">
+                </a>
+                <a href="https://steamcommunity.com/id/koteyevich/" target="_blank" class="social-btn steam">
+                    <img src="assets/icons/steam-brands.svg" alt="Steam">
                 </a>
             </div>
         </div>
     </div>
 
+    <!-- Music Player -->
+    <div class="music-player">
+        <div id="current-track-title" style="color: white; margin-bottom: 10px;">Track Title</div>
+        <div class="player-controls">
+            <button class="control-btn" id="prev-btn">
+                <img src="assets/icons/backward-solid.svg" alt="Previous">
+            </button>
+            <button class="control-btn" id="play-pause-btn">
+                <img src="assets/icons/play-solid.svg" alt="Play/Pause" class="play-pause-icon">
+            </button>
+            <button class="control-btn" id="next-btn">
+                <img src="assets/icons/forward-solid.svg" alt="Next">
+            </button>
+        </div>
+        <div class="volume-control">
+            <img src="assets/icons/volume-high-solid.svg" alt="Volume" class="volume-icon">
+            <input type="range" id="volume-slider" min="0" max="100" value="40">
+        </div>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="background-music">
+        <source src="assets/media/WebFishing-Together.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
     <script>
-        document.querySelectorAll('.blurred-img').forEach(blurredImageDiv => {
-            const img = blurredImageDiv.querySelector('img');
+        // Music Player Functionality
+        const audioPlayer = document.getElementById('background-music');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentTrackTitle = document.getElementById('current-track-title');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeIcon = document.querySelector('.volume-control i');
 
-            function loaded() {
-                blurredImageDiv.classList.add('loaded');
-            }
+        // Playlist (add more tracks as needed)
+        const playlist = [
+            { title: "Webfishing - Together", file: "WebFishing-Together.ogg" },
+            { title: "nicopatty - Safe Room", file: "nicopatty - safe room drums only.mp3" },
+            { title: "EarthBound - The Jolly Flying Man", file: "jolly flying man.mp3" }
+        ];
 
-            if (img.complete) {
-                loaded();
+        let currentTrack = 0;
+
+        function updateTrackDisplay() {
+            currentTrackTitle.textContent = playlist[currentTrack].title;
+        }
+
+        // Player Controls
+        playPauseBtn.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playPauseBtn.querySelector('img').src = 'assets/icons/pause-solid.svg';
             } else {
-                img.addEventListener('load', loaded);
+                audioPlayer.pause();
+                playPauseBtn.querySelector('img').src = 'assets/icons/play-solid.svg';
             }
         });
 
-        // Falling leaves effect
-        function createFallingImage() {
-            const img = document.createElement('img');
-            img.src = 'images/falling_me.png';
-            img.className = 'falling';
-            img.style.left = Math.random() * window.innerWidth + 'px';
-            img.style.animationDuration = (5 + Math.random() * 10) + 's';
-            document.body.appendChild(img);
+        nextBtn.addEventListener('click', () => {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            audioPlayer.src = `assets/media/${playlist[currentTrack].file}`;
+            audioPlayer.play();
+            playPauseBtn.querySelector('img').src = 'assets/icons/pause-solid.svg';
+            updateTrackDisplay();
+        });
 
-            img.addEventListener('animationend', () => {
-                img.remove();
+        prevBtn.addEventListener('click', () => {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            audioPlayer.src = `assets/media/${playlist[currentTrack].file}`;
+            audioPlayer.play();
+            playPauseBtn.querySelector('img').src = 'assets/icons/pause-solid.svg';
+            updateTrackDisplay();
+        });
+
+        // Auto-play next track
+        audioPlayer.addEventListener('ended', () => {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            audioPlayer.src = `assets/media/${playlist[currentTrack].file}`;
+            audioPlayer.play();
+            updateTrackDisplay();
+        });
+
+        // Initialize track display
+        updateTrackDisplay();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const audioPlayer = document.getElementById('background-music');
+
+            try {
+                // Try to start playback immediately
+                await audioPlayer.play();
+                playPauseBtn.querySelector('img').src = 'assets/icons/pause-solid.svg';
+            } catch (error) {
+                console.log('Autoplay prevented. Waiting for user interaction.');
+                // Show a play button or message to users
+                playPauseBtn.querySelector('img').src = 'assets/icons/play-solid.svg';
+            }
+        });
+
+        // Alternative approach: Start playback on first user interaction
+        document.addEventListener('click', function initAudio() {
+            const audioPlayer = document.getElementById('background-music');
+            audioPlayer.play().then(() => {
+                playPauseBtn.querySelector('img').src = 'assets/icons/pause-solid.svg';
+                // Remove the event listener after successful playback
+                document.removeEventListener('click', initAudio);
+            }).catch(error => {
+                console.log('Playback failed:', error);
             });
-        }
+        }, { once: true });
 
-        setInterval(createFallingImage, 1000); // Create a new falling image every second
+        // Volume Control
+        volumeSlider.addEventListener('input', () => {
+            const volume = volumeSlider.value / 100;
+            audioPlayer.volume = volume;
+            const volumeIcon = document.querySelector('.volume-icon');
+
+            if (volume === 0) {
+                volumeIcon.src = 'assets/icons/volume-mute-solid.svg';
+            } else if (volume < 0.5) {
+                volumeIcon.src = 'assets/icons/volume-low-solid.svg';
+            } else {
+                volumeIcon.src = 'assets/icons/volume-high-solid.svg';
+            }
+        });
+
+        // Initialize volume
+        audioPlayer.volume = volumeSlider.value / 100;
     </script>
+
+    <!-- Font Awesome -->
 </body>
 
 </html>
